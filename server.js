@@ -2,17 +2,6 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const port = 3000;
-// const pool = require('./database'); // Importez votre fichier de configuration
-
-// app.get('/Admin', async (req, res) => {
-//   try {
-//     const result = await pool.query('SELECT * FROM users');
-//     res.json(result.rows);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Erreur lors de la récupération des utilisateurs.');
-//   }
-// });
 
 app.get('/', (req, res) => {
     // envoye vers clients
