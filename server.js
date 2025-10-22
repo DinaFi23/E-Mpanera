@@ -1,4 +1,7 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+const session =  require('express-session')
+const path = require('path');
 const app = express();
 const port = 3000;
 const dotenv = require('dotenv')
@@ -19,9 +22,10 @@ Connex.connect().then(()=>{
   console.log('Database Connected');
 })
 
+app.use(express.static("Public"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
- 
 //Ajout de donnée 
 app.post('/Add', (req, res) => {
   const { titre,des,status } = req.body;
@@ -94,10 +98,72 @@ app.delete('/delete/:list_id',(req, res) => {
   
 })
 
+// Session
+app.use(
+  session({
+    secret: "secret-key",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
+//acces vers le client 
+app.get("/", (req, res) => {
+  res.redirect('/logout')
+});
 
+// recuperer le login 
+app.get("/login", (req, res) => {
+  res.sendFile("index.html", { root: "./Public" });
+});
+
+// 🔹 Page de login
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  const result = await Connex.query("SELECT * FROM admin WHERE username = $1", [
+    username,
+  ]);
+
+  if (result.rows.length === 0) {
+    return res.status(401).send("Utilisateur introuvable");
+  }
+
+  const hash = await bcrypt.hash(password, 10); // mot de passe clair → hashé
+  Connex.query("UPDATE admin SET password = $1 WHERE username = $2", [hash, "Dina"]);
+
+  const admin = result.rows[0];
+  const validPassword = await bcrypt.compare(password, admin.password);
+
+  if (!validPassword) {
+    return res.status(401).send("Mot de passe incorrect");
+    
+  }
+
+  
+  // Authentification réussie
+  req.session.admin = admin.username;
+  res.redirect("/admin");
+});
+
+// 🔒 Route protégée
+app.get("/admin", (req, res) => {
+  if (!req.session.admin) {
+    return res.status(403).send("Accès refusé. Connectez-vous d'abord !");
+  }
+
+  res.sendFile("admin.html", { root: "./Public" });
+});
+
+// 🔓 Déconnexion
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.sendFile("client.html", { root: "./Public" });
+  });
+});
 
 app.listen(port, () => {
   console.log(`le Serveur est lancé sur le port  ${port}`)
 })
+
 
