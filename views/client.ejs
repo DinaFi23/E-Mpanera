@@ -18,6 +18,13 @@
             <li><%= item.eau %></li>
             <li><%= item.loyer %></li>
             <li><%= item.contact %></li>
+            <li>
+               <% if(item.image) { %>
+               <img src="/uploads/<%= item.image %>" alt="image" width="200">
+                 <% } else { %>
+                <p>Aucune image disponible</p>
+               <% } %>
+            </li>
          </ul>
             
         <% }) %>

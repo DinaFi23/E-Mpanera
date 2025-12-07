@@ -13,16 +13,20 @@
     <main>
         <div class="leftside">
             <h1 style="text-align: center;"> Formulaire d'ajout </h1> <hr>
-            <form action="/Add" method="POST" >
+            <form action="/Add" method="POST" enctype="multipart/form-data">
                 <div class="form">
-                <label for="Loyer"> Lieu : </label><input type="text" name="Lieu">
-                <label for="Type"> Type du maison : </label><input type="text" name="Type">
-                <label for="Dimension"> Dimension : </label><input type="text" name="Dimension">
-                <label for="Electricité"> Electricité : </label><input type="text" name="Electricité">
-                <label for="Eau"> Eau : </label><input type="text" name="Eau">
-                <label for="Loyer"> Loyer : </label><input type="text" name="Loyer">
-                <label for="Contact"> Contact : </label><input type="text" name="Contact">
-                <button type="submit" id="Ajout">Ajouter</button>
+                <input type="hidden" name="id" id="id">
+                <label for="Loyer"> Lieu : </label><input type="text" name="Lieu" id="Lieu">
+                <label for="Type"> Type du maison : </label><input type="text" name="Type" id="Type">
+                <label for="Dimension"> Dimension : </label><input type="text" name="Dimension" id="Dimension">
+                <label for="Electricité"> Electricité : </label><input type="text" name="Electricite" id="Electricite">
+                <label for="Eau"> Eau : </label><input type="text" name="Eau" id="Eau">
+                <label for="Loyer"> Loyer : </label><input type="text" name="Loyer" id="Loyer">
+                <label for="Contact"> Contact : </label><input type="text" name="Contact" id="Contact">
+                <label for="Image"> Image : </label><input type="file" name="image" id="image" accept="image/*">
+                <button type="submit" id="Ajout">
+                    Ajouter
+                </button>
             </div>
             </form>
         </div>
@@ -34,12 +38,10 @@
                         <li><%= item.loyer %></li>
                         <li><%= item.contact %></li>
                         <li>
-                            <form action="/delete/<%= item.id %>" method="post">
+                             <input type="button" value="Modifier" id="button2" onclick="remplirdonnée('<%= item.id %>' , '<%= item.lieu %>' , '<%= item.typa %>' , '<%= item.dimension %>' , '<%= item.electricite %>' , '<%= item.eau %>' , '<%= item.loyer %>' , '<%= item.contact %>')">
+                             <form action="/delete/<%= item.id %>" method="post">
                                 <button type="submit"> Supprimer </button>
-                            </form>
-
-                            <a href="/edit/<%= item.id %>">Modifier</a>
-                            <!-- <input type="button" value="Modifier">  --> 
+                            </form> 
                         </li>
                     </ul>
                     
@@ -54,7 +56,16 @@
 </body>
 <script>
 
-
+ function remplirdonnée(id, Lieu, Type, Dimension, Electricite, Eau, Loyer, Contact) {
+          document.getElementById('id').value = id;
+          document.getElementById('Lieu').value = Lieu;
+          document.getElementById('Type').value = Type;
+          document.getElementById('Dimension').value = Dimension;
+          document.getElementById('Electricite').value = Electricite;
+          document.getElementById('Eau').value = Eau;
+          document.getElementById('Loyer').value = Loyer;
+          document.getElementById('Contact').value = Contact;
+}
 
 </script>
 </html>

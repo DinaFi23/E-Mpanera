@@ -8,6 +8,7 @@ const dotenv = require('dotenv')
 const pg = require('pg')
 dotenv.config();
 const { Client } = require('pg');
+const multer = require("multer");
 
 const Connex = new Client({
   host: process.env.PGHOST,
@@ -37,6 +38,37 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+
+// Définit où stocker l’image
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "Public/uploads/"); // Dossier à la racine de ton projet
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      Date.now() + "-" + file.originalname.replace(/\s+/g, "_")
+    );
+  },
+});
+
+// Filtrage des fichiers (facultatif)
+const fileFilter = (req, file, cb) => {
+  const allowed = ["image/jpeg", "image/png", "image/jpg"];
+  if (allowed.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Format d'image invalide"), false);
+  }
+};
+
+// Middleware Multer
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+});
+
 
 //acces vers le client 
 app.get('/', async (req, res) => {
@@ -108,11 +140,80 @@ app.get("/logout", (req, res) => {
   });
 });
 
+
+app.post("/delete/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await Connex.query("DELETE FROM list WHERE id = $1", [id]);
+    res.redirect("/admin");
+  } catch (err) {
+    console.error(err);
+    res.send("Erreur lors de la suppression");
+  }
+
+});
+
+
+app.get("/edit/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const result = await Connex.query("SELECT * FROM list WHERE id = $1", [id]);
+
+  res.render("admin", { item: result.rows[0] });
+});
+ 
+app.post("/Add",upload.single("image") , (req, res) => {
+
+  console.log(req.body)
+  let { id ,Lieu ,Type , Dimension, Electricite, Eau, Loyer, Contact } = req.body;
+  const imagePath = req.file ? req.file.filename : null;
+  const idNumber = id ? Number(id) : null;
+
+  try {
+    if (!idNumber) {
+
+      Connex.query(
+        "INSERT INTO list (lieu, typa, dimension, electricite, eau, loyer, contact, image ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
+        [Lieu ,Type , Dimension, Electricite, Eau, Loyer, Contact, imagePath] ) 
+        console.log("Nouvelle entrée ajoutée !");
+
+    } else {
+       if (imagePath) {
+        // Si une nouvelle image a été uploadée → remplacer la colonne image
+        Connex.query(
+          "UPDATE list SET lieu=$1, typa=$2, dimension=$3, electricite=$4, eau=$5, loyer=$6, contact=$7, image=$8 WHERE id=$9",
+          [Lieu, Type, Dimension, Electricite, Eau, Loyer, Contact, imagePath, idNumber]
+        );
+        console.log("Entrée mise à jour avec nouvelle image !");
+        }
+        else {
+        // Sinon, ne pas toucher la colonne image
+             Connex.query(
+             "UPDATE list SET lieu=$1, typa=$2, dimension=$3, electricite=$4, eau=$5, loyer=$6, contact=$7 WHERE id=$8",
+             [Lieu, Type, Dimension, Electricite, Eau, Loyer, Contact, idNumber]);
+             console.log("Entrée mise à jour sans changer l'image !");
+            }
+           }
+
+       Connex.query(
+        "UPDATE list SET lieu=$1, typa=$2, dimension=$3, electricite=$4, eau=$5, loyer=$6, contact=$7 WHERE id=$8",
+        [Lieu ,Type , Dimension, Electricite, Eau, Loyer, Contact, idNumber] 
+      );
+
+    res.redirect("/admin"); // Redirige vers ta page admin (ou autre)
+
+  } catch (err) {
+    console.error(err);
+    res.send("Erreur lors de l'enregistrement");
+  }
+});
+
 app.listen(port, () => {
   console.log(`le Serveur est lancé sur le port  ${port}`)
 })
 
-
+/*
 //Ajout de donnée 
 app.post('/Add', (req, res) => {
 
@@ -189,27 +290,37 @@ app.delete('/delete/:list',(req, res) => {
   
 })
 
-*/
 
-app.post("/delete/:id", async (req, res) => {
-  const id = req.params.id;
+
+app.post("/Add", (req, res) => {
+
+  let { id ,Lieu ,Type , Dimension, Electricité, Eau, Loyer, Contact } = req.body;
 
   try {
-    await Connex.query("DELETE FROM list WHERE id = $1", [id]);
-    res.redirect("/admin");
+    if (!id || id === "") {
+
+         Connex.query(
+        "INSERT INTO list (lieu, typa, dimension, electricite, eau, loyer, contact, image ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
+        [Lieu ,Type , Dimension, Electricité, Eau, Loyer, Contact, imagePath] )
+         console.log("Nouvelle entrée ajoutée !");
+
+    } else {
+
+       Connex.query(
+        "UPDATE list SET lieu=$1, typa=$2, dimension=$3, electricite=$4, eau=$5, loyer=$6, contact=$7 WHERE id=$8",
+        [Lieu ,Type , Dimension, Electricité, Eau, Loyer, Contact, id]
+      );
+
+    }
+
+    res.redirect("/admin"); // Redirige vers ta page admin (ou autre)
+
   } catch (err) {
     console.error(err);
-    res.send("Erreur lors de la suppression");
+    res.send("Erreur lors de l'enregistrement");
   }
-
 });
 
+*/
 
-app.get("/edit/:id", async (req, res) => {
-  const id = req.params.id;
 
-  const result = await Connex.query("SELECT * FROM users WHERE id = $1", [id]);
-
-  res.render("edit", { user: result.rows[0] });
-});
- 
