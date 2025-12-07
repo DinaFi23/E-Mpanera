@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Astyle.css">
+    <link rel="stylesheet" href="/css/Astyle.css">
     <title>E-mpanera</title>
 </head>
 <body>
@@ -28,11 +28,23 @@
         </div>
         <div class="rightside">
             <div class="list-container">
-                <div class="lie">
+                <% items.forEach(function(item) { %>
+                    <ul>
+                        <li><%= item.lieu %></li>
+                        <li><%= item.loyer %></li>
+                        <li><%= item.contact %></li>
+                        <li>
+                            <form action="/delete/<%= item.id %>" method="post">
+                                <button type="submit"> Supprimer </button>
+                            </form>
+
+                            <a href="/edit/<%= item.id %>">Modifier</a>
+                            <!-- <input type="button" value="Modifier">  --> 
+                        </li>
+                    </ul>
                     
-                </div>
-                <div class="Loye"></div>
-                <div class="Conta"></div>
+                    <hr>
+                <% }) %>
             </div>
         </div>
     </main>
@@ -40,4 +52,9 @@
         <a href="/logout" id="red">Se déconnecter</a>
     </footer>
 </body>
+<script>
+
+
+
+</script>
 </html>

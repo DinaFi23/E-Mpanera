@@ -22,6 +22,9 @@ Connex.connect().then(()=>{
   console.log('Database Connected');
 })
 
+app.set("view engine" , "ejs");
+app.set("views" , "views");
+
 app.use(express.static('Public'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,13 +39,20 @@ app.use(
 );
 
 //acces vers le client 
-app.get("/", async (req, res) => {    
-  res.sendFile("client.html", { root: "./Public" });
+app.get('/', async (req, res) => {
+  try {
+    const result = await Connex.query('SELECT * FROM list ');
+    res.render('client', { items: result.rows});
+  } catch (err) {
+    console.error('Error fetching list:', err);
+    res.status(500).send('Erreur serveur');
+  }
 });
+
 
 // recuperer le login 
 app.get("/login", (req, res) => {
-  res.sendFile("login.html", { root: "./Public" });
+  res.render("login");
 });
 
 // 🔹 Page de login
@@ -75,12 +85,20 @@ app.post("/login", async (req, res) => {
 });
 
 // 🔒 Route protégée
-app.get("/admin", (req, res) => {
+app.get("/admin", async (req, res) => {
   if (!req.session.admin) {
     return res.status(403).send("Accès refusé. Connectez-vous d'abord !");
   }
 
-   res.sendFile("admin.html", { root: "./Public" });
+   try {
+    const result = await Connex.query('SELECT * FROM list ');
+    res.render('admin', { items: result.rows});
+  } catch (err) {
+    console.error('Error fetching list:', err);
+    res.status(500).send('Erreur serveur');
+  }
+
+ //  res.render("admin");
   });
 
 // 🔓 Déconnexion
@@ -156,8 +174,9 @@ app.put('/update/:list_id', (req, res)=>{
 })
 });
 
-//effacement de donnée 
-app.delete('/delete/:list_id',(req, res) => {
+
+
+app.delete('/delete/:list',(req, res) => {
   const list_id = req.params.list_id ;
   const del = " delete from list where list_id = $1 "
     Connex.query(del,[list_id],(err, result)=>{
@@ -171,3 +190,26 @@ app.delete('/delete/:list_id',(req, res) => {
 })
 
 */
+
+app.post("/delete/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await Connex.query("DELETE FROM list WHERE id = $1", [id]);
+    res.redirect("/admin");
+  } catch (err) {
+    console.error(err);
+    res.send("Erreur lors de la suppression");
+  }
+
+});
+
+
+app.get("/edit/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const result = await Connex.query("SELECT * FROM users WHERE id = $1", [id]);
+
+  res.render("edit", { user: result.rows[0] });
+});
+ 

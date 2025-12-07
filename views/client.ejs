@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-mpanera</title>
+</head>
+<body>
+    <h1> Bienvenu Client </h1>
+    <h1> COUCOU </h1>
+
+     <% items.forEach(function(item) { %>
+         <ul>
+            <li><%= item.lieu %></li>
+            <li><%= item.typa %></li>
+            <li><%= item.dimension %></li>
+            <li><%= item.electricite %></li>
+            <li><%= item.eau %></li>
+            <li><%= item.loyer %></li>
+            <li><%= item.contact %></li>
+         </ul>
+            
+        <% }) %>
+
+    <a href="/login">Espace administrateur</a>
+</body>
+</html>
