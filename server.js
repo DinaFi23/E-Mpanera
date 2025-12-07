@@ -22,7 +22,7 @@ Connex.connect().then(()=>{
   console.log('Database Connected');
 })
 
-app.use(express.static("Public"));
+app.use(express.static('Public'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -36,7 +36,7 @@ app.use(
 );
 
 //acces vers le client 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {    
   res.sendFile("client.html", { root: "./Public" });
 });
 
@@ -80,8 +80,8 @@ app.get("/admin", (req, res) => {
     return res.status(403).send("Accès refusé. Connectez-vous d'abord !");
   }
 
-  res.sendFile("admin.html", { root: "./Public" });
-});
+   res.sendFile("admin.html", { root: "./Public" });
+  });
 
 // 🔓 Déconnexion
 app.get("/logout", (req, res) => {
@@ -95,22 +95,23 @@ app.listen(port, () => {
 })
 
 
-/*
-
 //Ajout de donnée 
 app.post('/Add', (req, res) => {
-  const { titre,des,status } = req.body;
-  const insert = 'INSERT INTO list (titre, des, status) VALUES ($1,$2,$3)'
-  Connex.query(insert,[titre, des, status],(err, result) =>{
+
+const { Lieu, Type, Dimension, Electricité, Eau, Loyer, Contact } = req.body;
+  
+const insert = 'INSERT INTO list (lieu, typa, dimension, electricite, eau, loyer, contact) VALUES ($1,$2,$3,$4,$5,$6,$7)'
+  Connex.query(insert,[ Lieu, Type, Dimension, Electricité, Eau, Loyer, Contact ],(err, result) =>{
       if (err) {
          res.send(err)
       } else {
-        console.log(result);
-        res.send("POSTED DATA");
+        res.redirect('/admin')
       }
-  })
+  }) 
 });
 
+
+/*
 
 //récuperation de donnée spécifique
 app.get('/fetchdatabyId/:list_id', (req, res) => {

@@ -3,10 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Astyle.css">
     <title>E-mpanera</title>
 </head>
 <body>
-    <h1> Bienvenu administrateur </h1>
-    <a href="/logout">Se déconnecter</a>
+    <header>
+        <h1> Administrateur </h1>
+    </header>
+    <main>
+        <div class="leftside">
+            <h1 style="text-align: center;"> Formulaire d'ajout </h1> <hr>
+            <form action="/Add" method="POST" >
+                <div class="form">
+                <label for="Loyer"> Lieu : </label><input type="text" name="Lieu">
+                <label for="Type"> Type du maison : </label><input type="text" name="Type">
+                <label for="Dimension"> Dimension : </label><input type="text" name="Dimension">
+                <label for="Electricité"> Electricité : </label><input type="text" name="Electricité">
+                <label for="Eau"> Eau : </label><input type="text" name="Eau">
+                <label for="Loyer"> Loyer : </label><input type="text" name="Loyer">
+                <label for="Contact"> Contact : </label><input type="text" name="Contact">
+                <button type="submit" id="Ajout">Ajouter</button>
+            </div>
+            </form>
+        </div>
+        <div class="rightside">
+            <div class="list-container">
+                <div class="lie">
+                    
+                </div>
+                <div class="Loye"></div>
+                <div class="Conta"></div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <a href="/logout" id="red">Se déconnecter</a>
+    </footer>
 </body>
 </html>
