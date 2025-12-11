@@ -1,0 +1,116 @@
+
+*{
+	margin:0;
+	padding:0;
+}
+
+#header{
+	background: linear-gradient(-45deg ,  rgb(3, 2, 26) ,#0f3257 , #c2c6c7  );
+	/*background-color:#0f3257;*/
+	height:100px;
+	width:100%;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	background-size: 200% 200%;
+	animation: ba 50s infinite;
+}
+
+@keyframes ba {
+    0%{
+        background-position: 0 50%;
+    }
+    50%{
+        background-position: 100% 50%;
+    }
+    0%{
+        background-position: 0 50%;
+    }
+}
+
+#Search{
+	display:flex;
+	flex-direction:row;
+	align-items: center;
+	gap: 20px;	
+}
+
+#list-container{
+	margin:20px;
+	display:flex;
+	flex-direction:row;
+    flex-wrap:wrap;
+	justify-content: center;
+	gap:30px;
+}
+
+#Myselect{
+	width:100px;
+	height:30px;
+	border-radius: 10px;
+	padding-left: 10px;
+}
+
+#text{
+	width:300px;
+	height:30px;
+	border-radius: 10px;
+	padding-left: 10px;
+	border: none;
+	box-shadow:0 0 5px #337ac5;
+}
+
+#Btn{
+	width:100px;
+	height:30px;
+	border-radius: 10px;
+	border: none;
+	box-shadow:0 0 5px #337ac5;
+	transition:0.4s;
+}
+
+#Btn:hover{
+	background-color: #081929;
+	box-shadow:0 0 5px #337ac5;
+	color:white;
+}
+
+.Card{
+	 height:400px;
+	 width:400px;
+	 display:flex;
+	 flex-direction:column;
+	 justify-content:space-around;
+	 align-items:center;
+	 border-radius:20px;
+	 box-shadow:0 0 5px #0f3257;
+	 opacity:0.7;
+	 transition:0.4s;
+}
+
+.Sary{
+	border:1px solid black;
+	width: 370px;
+	transition:2s;
+}
+
+.Card:hover{
+	opacity:1;
+	box-shadow:0 0 20px #0f3257;
+}
+	
+.parent{
+	display:flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	gap:30px;
+	padding-bottom:40px;
+}
+
+.col2, .col3{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap:20px;
+}

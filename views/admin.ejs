@@ -16,6 +16,7 @@
             <form action="/Add" method="POST" enctype="multipart/form-data">
                 <div class="form">
                 <input type="hidden" name="id" id="id">
+                <span id="Alert"></span>
                 <label for="Loyer"> Lieu : </label><input type="text" name="Lieu" id="Lieu">
                 <label for="Type"> Type du maison : </label><input type="text" name="Type" id="Type">
                 <label for="Dimension"> Dimension : </label><input type="text" name="Dimension" id="Dimension">
@@ -55,6 +56,7 @@
     </footer>
 </body>
 <script>
+
 
  function remplirdonnée(id, Lieu, Type, Dimension, Electricite, Eau, Loyer, Contact) {
           document.getElementById('id').value = id;

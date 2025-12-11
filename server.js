@@ -74,7 +74,7 @@ const upload = multer({
 app.get('/', async (req, res) => {
   try {
     const result = await Connex.query('SELECT * FROM list ');
-    res.render('client', { items: result.rows});
+    res.render('index', { items: result.rows});
   } catch (err) {
     console.error('Error fetching list:', err);
     res.status(500).send('Erreur serveur');

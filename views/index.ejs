@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/css/Cstyle.css">
+    <title>E-mpanera</title>
+</head>
+<body>
+<div class='container'>
+   <div id='header'>
+		<div id='Search'>
+			<select id='Myselect' >
+				<option value='Lieu'> Lieu </option>
+				<option value='Loyer'> Loyer </option>
+			 </select>
+			<input type='text' id="text" autocomplete="off">
+			<button id="Btn" onclick="getValue()"> Chercher </button>
+		</div>
+   </div>
+   <div id="list-container">
+    	<% items.forEach(function(item) { %>
+	
+			<div class="Card">
+
+				<% if(item.image) { %>
+               <img src="/uploads/<%= item.image %>" alt="image" class="Sary" id="agra" onkeypress="click()">
+                 <% } else { %>
+                <p>Aucune image disponible</p>
+               <% } %>
+
+				<div class="parent">
+					<div class="col1">
+						<div class="div1"><%= item.lieu %></div>
+					</div>
+					<div class="col2">
+						<div class="div2"><%= item.typa %></div>
+						<div class="div3"><%= item.dimension %></div>
+						<div class="div4"><%= item.loyer %></div>
+					</div>
+					<div class="col3">
+						<div class="div5"><%= item.electricite %></div>
+						<div class="div6"><%= item.eau %></div>
+						<div class="div7"><%= item.contact %></div>
+					</div>
+			</div>
+		</div>
+		<% }) %>
+		</div>
+   </div>
+   <a href="/login">Espace administrateur</a>
+</div>
+<script>
+	let Valeur ;
+	let choix; 
+
+	function getValue(){
+		
+		let value = document.getElementById("text").value;
+		let value2 = document.getElementById("Myselect").value;
+
+		Valeur = value;
+		Choix = value2;
+		
+		console.log( Choix, Valeur )			
+				
+	}
+	
+	let agrandir = document.getElementById('agra');
+	let cond = true;
+
+	function click(){
+		if(cond){
+			agrandir.style.width = "600px";
+			cond = false;
+		}else{
+			agrandir.style.width = "370px";
+		}
+	}
+	
+	
+</script>
+</script>
+</body>
+</html>
